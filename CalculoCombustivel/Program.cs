@@ -2,6 +2,46 @@ namespace CalculoCombustivel
 {
     internal class Program
     {
+
+        static bool validaPositivo(float n)
+        {
+            bool x = true;
+
+            if (n < 0)
+            {
+                x = false;
+            }
+            return x;
+
+        }
+
+
+        static float validaNreal(float n)
+        {
+            float x = 0.0f;
+            string opc = "";
+
+            while (true)
+            {
+
+
+                opc = Console.ReadLine();
+                bool isNumberFloat = float.TryParse(opc, out x);
+
+                if (isNumberFloat && validaPositivo(x))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.Write("\nDigite um número real positivo:");
+                }
+            }
+            return x;
+
+        }
+
+
         static void inicoPrograma(float proporcao)
         {
             int opcaoMenu = 0;
@@ -22,8 +62,17 @@ namespace CalculoCombustivel
                     inicoPrograma(proporcao);
                     break;
                 case 3:
-                    Console.WriteLine("\nSaindo do programa...");
-                    System.Threading.Thread.Sleep(1500);
+                    Console.WriteLine("Digite 1 para confirmar a saída e qualquer outra tecla para cancelar");
+                    string confirmar = Console.ReadLine();
+                    if (confirmar == "1")
+                    {
+                        Console.WriteLine("\nSaindo do programa...");
+                        System.Threading.Thread.Sleep(1500);
+                    }
+                    else
+                    {
+                        inicoPrograma(proporcao);
+                    }
                     break;
             }
         }
@@ -84,13 +133,41 @@ namespace CalculoCombustivel
         static float calculaProporcao()
         {
 
-            float proporcaoTemp = 0.0f, kmGasolina = 0.0f, kmEtanol = 0.0f;
+            float proporcaoTemp = 0.7f, kmGasolina = 0.0f, kmEtanol = 0.0f;
             Console.Write("\nDigite o consumo do carro utilizando gasolina Km/L: ");
-            kmGasolina = float.Parse(Console.ReadLine());
-            Console.Write("Digite o consumo do carro utilizando etanol Km/L: ");
-            kmEtanol = float.Parse(Console.ReadLine());
+            kmGasolina = validaNreal(kmGasolina);
 
-            proporcaoTemp = ((kmEtanol * 100) / kmGasolina) / 100;
+            Console.Write("Digite o consumo do carro utilizando etanol Km/L: ");
+            kmEtanol = validaNreal(kmEtanol);
+
+
+            if (kmGasolina == 0 && kmEtanol != 0)
+            {
+                Console.WriteLine("Seu carro é somente etanol");
+               
+            }
+         
+            else if (kmEtanol == 0 && kmGasolina != 0)
+            {
+                Console.WriteLine("Seu carro é somente gasolina");
+              
+
+            }
+            else if (kmEtanol == 0 & kmGasolina == 0)
+            {
+                Console.WriteLine("Você deve digitar um número real positivo" +
+                    " para pelos menos uma das duas opções, voltando para o menu");
+
+
+            }
+            else
+            {
+                 proporcaoTemp = ((kmEtanol * 100) / kmGasolina) / 100;
+               
+        
+            }
+            Console.WriteLine("Proporção: " + proporcaoTemp);
+
             return proporcaoTemp;
         }
 
